@@ -1,0 +1,32 @@
+name: 24/7 Web Activity Worker
+
+on:
+  schedule:
+    # প্রতি ২০ মিনিট পর পর স্বয়ংক্রিয়ভাবে চলবে
+    - cron: '*/20 * * * *'
+  # আপনার প্রয়োজন অনুযায়ী ম্যানুয়ালি রান করার সুবিধা
+  workflow_dispatch:
+
+jobs:
+  run-crawler:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Requests Library
+        run: |
+          pip install requests
+
+      - name: Run Crawler
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          API_KEY: ${{ secrets.API_KEY }}
+        run: |
+          python crawler.py
